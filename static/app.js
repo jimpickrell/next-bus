@@ -1,13 +1,11 @@
 $(function() {
-  if (~window.location.search.indexOf('touch')) {
-    Modernizr.touch = true;
-  }
-
   var map = new google.maps.Map(document.getElementById('map-canvas'), {
     center: new google.maps.LatLng(-33.9, 151.2),
     zoom: Modernizr.touch ? 15 : 13,
     mapTypeId: google.maps.MapTypeId.ROADMAP
   });
+  
+  addTabs(map);
 
   if (Modernizr.touch) {
     google.maps.event.addListener(map, 'idle', function() {
@@ -58,6 +56,23 @@ $(function() {
   setInterval(updateTimes, 1000);
   stopHoverMarker.setMap(map);
 });
+
+function addTabs() {
+  $('#btn-map').click(function() {
+    $('#map-canvas').show();
+  	$('#buses').hide();
+  	$('.button-active').removeClass('button-active');
+  	$(this).addClass('button-active');
+  	google.maps.event.trigger(map, 'resize');
+  });
+  
+  $('#btn-buses').click(function() {
+  	$('#map-canvas').hide();
+  	$('#buses').show();
+  	$('.button-active').removeClass('button-active');
+  	$(this).addClass('button-active');
+  });	
+};
 
 function onQueryChange(map, marker) {
   var q = ['https://www.google.com/fusiontables/api/query?sql='];
