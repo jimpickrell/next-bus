@@ -10,7 +10,8 @@ $(function() {
     map: map,
     draggable: true,
     icon: new google.maps.MarkerImage(
-      'http://oa-samples.googlecode.com/svn-history/r73/trunk/presentations/gdd-2010/saopaulo/talks/maps/my-location.png',
+      'http://oa-samples.googlecode.com/svn-history/r73/trunk/' +
+      'presentations/gdd-2010/saopaulo/talks/maps/my-location.png',
       null, null, new google.maps.Point(6, 7)),
     flat: true,
     raiseOnDrag: false
@@ -27,13 +28,6 @@ $(function() {
     var ll = new google.maps.LatLng(p.coords.latitude, p.coords.longitude);
     map.setCenter(ll);
     marker.setPosition(ll);
-    /*new google.maps.Circle({
-      center: ll,
-      radius: p.coords.accuracy,
-      strokeWeight: 1,
-      strokeColor: '#ffff00',
-      map: map
-    });*/
     map.setZoom(14);
   });
   
@@ -95,7 +89,11 @@ function setBuses(stops) {
   $('#buses').empty();
   for (var i = 0; i < b.length; i++) {
     var bus = b[i];
-    var html = ['<li data-stop="',bus.stopid,'" data-datetime="',bus.time,'">','<span class="arrival"></span><span class="route">',bus.route,'</span><span class="dest">',bus.dest,'</span>',bus.vid,'</li>'].join('');
+    var html = ['<li data-stop="',bus.stopid,'" data-datetime="',bus.time,'">',
+        '<span class="arrival"></span><span class="route">',bus.route,
+        '</span><span class="dest">',bus.dest,'</span>',bus.vid,'</li>']
+          .join('');
+
     var li = $(html);
     $('#buses').append(li);
     (function(li) {
