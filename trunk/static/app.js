@@ -59,14 +59,22 @@ $(function() {
   }, 1000);
 
   stopHoverMarker.setMap(map);
-
-  if (Modernizr.touch) {
-    $('#buses')[0].ontouchmove = function() {
+  if (Modernizr.touch && ~navigator.userAgent.indexOf('iPhone')) {
+    var fixHeader = function() {
       document.getElementById('footer').style.top =
          (window.pageYOffset + window.innerHeight - 45) + 'px';
       document.getElementById('header').style.top =
          (window.pageYOffset) + 'px';
     };
+
+    $('#buses')[0].ontouchstart = fixHeader;
+    $('#buses')[0].ontouchmove = fixHeader;
+    $('#buses')[0].ontouchend = fixHeader;
+
+    setInterval(fixHeader, 500);
+    $("#btn-map, #btn-buses").click(fixHeader);
+    $(window).scroll(fixHeader);
+    $("#buses").scroll(fixHeader);
   }
 
 });
