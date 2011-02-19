@@ -23,7 +23,11 @@ $(function() {
       flat: true,
       raiseOnDrag: false
     });
-
+    
+    $('#my-location').click(function() {
+      map.panTo(marker.getPosition());	
+    });
+    
     new google.maps.Circle({
       map: map,
       radius: 300,
@@ -64,6 +68,7 @@ function addTabs() {
   	$('.button-active').removeClass('button-active');
   	$(this).addClass('button-active');
   	google.maps.event.trigger(map, 'resize');
+  	return false;
   });
   
   $('#btn-buses').click(function() {
@@ -71,6 +76,7 @@ function addTabs() {
   	$('#buses').show();
   	$('.button-active').removeClass('button-active');
   	$(this).addClass('button-active');
+  	return false;
   });	
 };
 
@@ -138,7 +144,7 @@ function setBuses(stops) {
     var bus = b[i];
     var html = ['<li data-stop="',bus.stopid,'" data-datetime="',bus.time,'">',
         '<span class="arrival"></span><span class="route">',bus.route,
-        '</span><span class="dest">',bus.dest,'</span></li>']
+        '</span><span class="dest">',bus.dest,'</span>',bus.vid,'</li>']
           .join('');
 
     var li = $(html);
