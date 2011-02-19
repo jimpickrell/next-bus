@@ -68,7 +68,7 @@ function getCurrentPosition(map, marker) {
   });
 };
 
-function addTabs() {
+function addTabs(map) {
   $('#btn-map').click(function() {
     $('#map-canvas').show();
     $('#buses').hide();
