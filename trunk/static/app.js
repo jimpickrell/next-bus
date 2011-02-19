@@ -4,6 +4,9 @@ $(function() {
     zoom: Modernizr.touch ? 15 : 13,
     mapTypeId: google.maps.MapTypeId.ROADMAP
   });
+  new google.maps.FusionTablesLayer(478005, {
+    map: map
+  });
   
   addTabs(map);
 
@@ -38,17 +41,13 @@ $(function() {
     });
   }
 
-  
-  
-  new google.maps.FusionTablesLayer(478005, {
-    map: map
-  });
-  
    $('#my-location').click(function() {
      getCurrentPosition(map, marker);
    });
 
-  setInterval(updateTimes, 1000);
+  setInterval(function() {
+    updateTimes(true);
+  }, 1000);
   stopHoverMarker.setMap(map);
 });
 
@@ -68,20 +67,20 @@ function getCurrentPosition(map, marker) {
 function addTabs() {
   $('#btn-map').click(function() {
     $('#map-canvas').show();
-  	$('#buses').hide();
-  	$('.button-active').removeClass('button-active');
-  	$(this).addClass('button-active');
-  	google.maps.event.trigger(map, 'resize');
-  	return false;
+    $('#buses').hide();
+    $('.button-active').removeClass('button-active');
+    $(this).addClass('button-active');
+    google.maps.event.trigger(map, 'resize');
+    return false;
   });
   
   $('#btn-buses').click(function() {
-  	$('#map-canvas').hide();
-  	$('#buses').show();
-  	$('.button-active').removeClass('button-active');
-  	$(this).addClass('button-active');
-  	return false;
-  });	
+    $('#map-canvas').hide();
+    $('#buses').show();
+    $('.button-active').removeClass('button-active');
+    $(this).addClass('button-active');
+    return false;
+  });  
 };
 
 function onQueryChange(map, marker) {
@@ -111,15 +110,24 @@ function onQueryChange(map, marker) {
   });
 };
 
-function updateTimes() {
+function updateTimes(slide) {
   var d = new Date() / 1000;
   $('#buses li').each(function() {
     var arr = Number($(this).attr('data-datetime'));
     var diff = arr - d;
     if (diff < 0) {
-      $(this).remove();
+      if (slide) {
+        $(this).slideUp();
+      } else {
+        $(this).remove();
+      }
     }
-    $('.arrival', this).text(parseInt(diff / 60));
+    if (diff > 60) {
+      var text = parseInt(diff/60) + '<span>m</span>';
+    } else {
+      var text = parseInt(diff) + '<span>s</span>';
+    }
+    $('.arrival', this).html(text);
   });
 }
 
