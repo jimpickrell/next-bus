@@ -143,7 +143,7 @@ var currentStops = {};
 
 function setStops(stops) {
   for (var i = 0; i < stops.length; i++) {
-    currentStops[stops[i].id] = stops[i];
+    currentStops[stops[i].getId()] = stops[i];
   }
   var ids = $.map(stops, function(stop) {return stop.getId()}).join(',');
   query(ids);
@@ -163,7 +163,7 @@ function setBuses(stops) {
   $('#buses').empty();
   for (var i = 0; i < b.length; i++) {
     var bus = b[i];
-    var stop = currentStops[li.attr('data-stop')];
+    var stop = currentStops[bus.stopid];
     var html = ['<li data-stop="',bus.stopid,'" data-datetime="',bus.time,'">',
         '<div class="arrival"></div><div class="route">',bus.route,
         '</div><div class="dest">',bus.dest,'</div>',
