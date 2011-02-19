@@ -213,51 +213,27 @@ body {
   );
 }
 
-    #buses li {
-      clear: both;
-      list-style: none;
-      margin: 10px;
-      border-bottom: 1px solid #eee;
-      padding: 10px;
-      overflow: hidden;
-    }
-    #buses li span {
-      display: block;
-    }
-    #buses li span.route {
-      font-weight: bold;
-    }
-    #buses li span.dest {
-      color: #666;
-    }
-    #buses li span.arrival {
-      float: left;
-      height: 40px;
-      width: 60px;
-      font-size: 2em;
-    }
+#buses li {
+  clear: both;
+  list-style: none;
+  margin: 10px;
+  border-bottom: 1px solid #eee;
+  padding: 10px;
+  overflow: hidden;
+}
 
-/*
+#buses li span {
+}
+#buses li span.route {
+  font-weight: bold;
+}
+#buses li span.dest {
+  color: #666;
+}
 
-
-    #map-canvas {
-      height: 700px;
-      width: 60%;
-      float: left;
-    }
-    #buses {
-      height: 500px;
-      width: 40%;
-      float: left;
-    }
-    #stops {
-      clear: both;
-    }
-    #buses {
-      height: 700px;
-      overflow: auto;
-    }
-
-    #stops {
-      display: none;
-    }*/
+#buses li span.arrival {
+  float: left;
+  height: 40px;
+  width: 60px;
+  font-size: 2em;
+}
