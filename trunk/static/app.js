@@ -1,8 +1,14 @@
 $(function() {
+  if (~window.location.search.indexOf('touch')) {
+    Modernizr.touch = true;
+  }
+
   var map = new google.maps.Map(document.getElementById('map-canvas'), {
     center: new google.maps.LatLng(-33.9, 151.2),
     zoom: Modernizr.touch ? 15 : 13,
-    mapTypeId: google.maps.MapTypeId.ROADMAP
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    mapTypeControl: false,
+    streetViewControl: false
   });
   new google.maps.FusionTablesLayer(478005, {
     map: map
@@ -44,6 +50,9 @@ $(function() {
    $('#my-location').click(function() {
      getCurrentPosition(map, marker);
    });
+   $('#refresh').click(function() {
+     onQueryChange(map, marker);
+   });
 
   setInterval(function() {
     updateTimes(true);
@@ -70,6 +79,9 @@ function getCurrentPosition(map, marker) {
 
 function addTabs(map) {
   $('#btn-map').click(function() {
+    $('#my-location').show();
+    $('#refresh').hide();
+
     $('#map-canvas').show();
     $('#buses').hide();
     $('.button-active').removeClass('button-active');
@@ -79,6 +91,9 @@ function addTabs(map) {
   });
   
   $('#btn-buses').click(function() {
+    $('#my-location').hide();
+    $('#refresh').show();
+
     $('#map-canvas').hide();
     $('#buses').show();
     $('.button-active').removeClass('button-active');
@@ -88,7 +103,6 @@ function addTabs(map) {
 };
 
 function onQueryChange(map, marker) {
-	
   $('#btn-buses').html('<img src="/static/ajax-loader.gif">');
   
   var q = ['https://www.google.com/fusiontables/api/query?sql='];

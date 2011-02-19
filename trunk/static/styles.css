@@ -92,6 +92,7 @@ body {
   left: 6px;
 }
 
+#refresh span,
 #my-location span {
   font-size: 23px !important;
   padding: 0 4px;
@@ -150,6 +151,16 @@ body {
 
 #load {
   display: none;	
+}
+
+#refresh {
+  display: none;
+}
+
+#refresh span {
+  display: block;
+  width: 16px;
+  height: 16px;
 }
 
 #footer {
