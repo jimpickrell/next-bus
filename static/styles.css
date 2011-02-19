@@ -269,3 +269,21 @@ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fffff
   font-size: 0.9em;
   font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", sans-serif;	
 }
+
+
+#refresh {
+  display: none;
+}
+
+#refresh span {
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+
+#refresh span,
+#my-location span {
+  font-size: 23px !important;
+  padding: 0 4px;
+}
+

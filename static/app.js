@@ -57,7 +57,18 @@ $(function() {
   setInterval(function() {
     updateTimes(true);
   }, 1000);
+
   stopHoverMarker.setMap(map);
+
+  if (Modernizr.touch) {
+    $('#buses')[0].ontouchmove = function() {
+      document.getElementById('footer').style.top =
+         (window.pageYOffset + window.innerHeight - 45) + 'px';
+      document.getElementById('header').style.top =
+         (window.pageYOffset) + 'px';
+    };
+  }
+
 });
 
 function getCurrentPosition(map, marker) {
