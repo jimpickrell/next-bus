@@ -1,0 +1,4 @@
+cron:
+- description: fetch new shit from RTA
+  url: /fetch
+  schedule: every 30 minutes
