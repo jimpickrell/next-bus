@@ -141,7 +141,6 @@ body {
 
 #buses {
   display: none;
-  overflow-y: scroll;
 }
 
 #loc, #load {
