@@ -131,12 +131,13 @@ function updateTimes(slide) {
   });
 }
 
-var currentStops = [];
+var currentStops = {};
 
 function setStops(stops) {
-  currentStops = stops;
+  for (var i = 0; i < stops.length; i++) {
+    currentStops[stops[i].id] = stops[i];
+  }
   var ids = $.map(stops, function(stop) {return stop.getId()}).join(',');
-  $('#stops').text(ids);
   query(ids);
 }
 
@@ -154,28 +155,14 @@ function setBuses(stops) {
   $('#buses').empty();
   for (var i = 0; i < b.length; i++) {
     var bus = b[i];
+    var stop = currentStops[li.attr('data-stop')];
     var html = ['<li data-stop="',bus.stopid,'" data-datetime="',bus.time,'">',
         '<span class="arrival"></span><span class="route">',bus.route,
-        '</span><span class="dest">',bus.dest,'</span>',bus.vid,'</li>']
-          .join('');
+        '</span><span class="dest">',bus.dest,'</span>',
+        '<span class="stopdesc">',stop.getDesc(),'</span></li>'].join('');
 
     var li = $(html);
     $('#buses').append(li);
-    (function(li) {
-      li.hover(function() {
-        var stop = $.grep(currentStops, function(a) { 
-          return a.getId() == li.attr('data-stop');
-        })[0];
-
-        stopHoverMarker.setOptions({
-          visible: true,
-          position: stop.getLocation()
-        });
-        stop.getLocation()
-      }, function() {
-        stopHoverMarker.setVisible(false);
-      });
-    })(li);
   }
 }
 
@@ -193,6 +180,9 @@ function Stop(id, lat, lng, desc) {
 } 
 Stop.prototype.getLocation = function() {
   return this.ll_;
+}
+Stop.prototype.getDesc = function() {
+  return this.desc_;
 }
 Stop.prototype.getId = function() {
   return this.id_;
