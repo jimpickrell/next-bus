@@ -1,4 +1,8 @@
 $(function() {
+  if (~window.location.search.indexOf('touch')) {
+    Modernizr.touch = true;
+  }
+
   var map = new google.maps.Map(document.getElementById('map-canvas'), {
     center: new google.maps.LatLng(-33.9, 151.2),
     zoom: Modernizr.touch ? 15 : 13,
