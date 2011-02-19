@@ -213,27 +213,59 @@ body {
   );
 }
 
+#buses ul {
+  margin: 0;
+  padding: 0;	
+}
+
 #buses li {
   clear: both;
   list-style: none;
-  margin: 10px;
   border-bottom: 1px solid #eee;
   padding: 10px;
   overflow: hidden;
+background: -moz-linear-gradient(top, #ffffff 0%, #f6f6f6 47%, #ededed 100%); /* firefox */
+
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(47%,#f6f6f6), color-stop(100%,#ededed)); /* webkit */
 }
 
 #buses li span {
 }
 #buses li span.route {
   font-weight: bold;
+  padding-right: 8px;
 }
 #buses li span.dest {
-  color: #666;
 }
 
-#buses li span.arrival {
+.route-info {
+  padding-top: 5px;	
+}
+
+.route-info, .stopdesc {
+  margin-left: 75px;
+  line-height: 18px;
+}
+
+.arrival {
   float: left;
   height: 40px;
   width: 60px;
   font-size: 2em;
+  padding-left: 5px;
+  line-height: 40px;
+}
+
+.arrival span {
+  color: #666;
+  font-weight: normal;
+  font-size: 0.75em;
+  font-family: "HelveticaNeue-UltraLight", "Helvetica Neue UltraLight", "Helvetica Neue", sans-serif;
+  font-weight: 100;
+}
+
+.stopdesc {
+  color: #666;
+  font-size: 0.9em;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", sans-serif;	
 }
