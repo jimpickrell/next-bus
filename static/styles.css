@@ -144,6 +144,15 @@ body {
   overflow-y: scroll;
 }
 
+#loc, #load {
+  width: 16px;
+  height: 16px;	
+}
+
+#load {
+  display: none;	
+}
+
 #footer {
   line-height: 43px;
 }
