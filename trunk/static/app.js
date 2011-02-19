@@ -161,22 +161,24 @@ function setBuses(stops) {
     return a.time - b.time;
   });
   $('#buses').empty();
+  var ul = $('<ul></ul>');
   for (var i = 0; i < b.length; i++) {
     var bus = b[i];
     var stop = currentStops[bus.stopid];
     var html = ['<li data-stop="',bus.stopid,'" data-datetime="',bus.time,'">',
-        '<div class="arrival"></div><div class="route">',bus.route,
-        '</div><div class="dest">',bus.dest,'</div>',
+        '<div class="arrival"></div><div class="route-info">',
+        '<span class="route">',bus.route,
+        '</span><span class="dest">',bus.dest,'</span></div>',
         '<div class="stopdesc">',stop.getDesc(),'</div></li>'].join('');
 
     var li = $(html);
-    $('#buses').append(li);
+    ul.append(li);
   }
+  $('#buses').append(ul);
 }
 
 function query(ids) {
   $.getJSON('/query?' + ids, function(stops) {
-  	console.log(stops);
     setBuses(stops);
     updateTimes();
   });
