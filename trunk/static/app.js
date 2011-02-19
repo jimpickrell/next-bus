@@ -123,7 +123,7 @@ function setBuses(stops) {
     var bus = b[i];
     var html = ['<li data-stop="',bus.stopid,'" data-datetime="',bus.time,'">',
         '<span class="arrival"></span><span class="route">',bus.route,
-        '</span><span class="dest">',bus.dest,'</span>',bus.vid,'</li>']
+        '</span><span class="dest">',bus.dest,'</span></li>']
           .join('');
 
     var li = $(html);
