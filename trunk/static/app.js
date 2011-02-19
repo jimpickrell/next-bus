@@ -1,58 +1,86 @@
 $(function() {
   var map = new google.maps.Map(document.getElementById('map-canvas'), {
     center: new google.maps.LatLng(-33.9, 151.2),
-    zoom: 13,
+    zoom: Modernizr.touch ? 15 : 13,
     mapTypeId: google.maps.MapTypeId.ROADMAP
   });
+
+  if (Modernizr.touch) {
+    google.maps.event.addListener(map, 'idle', function() {
+      onQueryChange(map);
+    });
+  } else {
+    var marker = new google.maps.Marker({
+      position: map.getCenter(),
+      map: map,
+      draggable: true,
+      icon: new google.maps.MarkerImage(
+        'http://oa-samples.googlecode.com/svn-history/r73/trunk/' +
+        'presentations/gdd-2010/saopaulo/talks/maps/my-location.png',
+        null, null, new google.maps.Point(6, 7)),
+      flat: true,
+      raiseOnDrag: false
+    });
+
+    new google.maps.Circle({
+      map: map,
+      radius: 300,
+      strokeColor: '#44c4ff',
+      fillColor: '#44c4ff'
+    }).bindTo('center', marker, 'position');
   
-  var marker = new google.maps.Marker({
-    position: map.getCenter(),
-    map: map,
-    draggable: true,
-    icon: new google.maps.MarkerImage(
-      'http://oa-samples.googlecode.com/svn-history/r73/trunk/' +
-      'presentations/gdd-2010/saopaulo/talks/maps/my-location.png',
-      null, null, new google.maps.Point(6, 7)),
-    flat: true,
-    raiseOnDrag: false
-  });
-  
-  new google.maps.Circle({
-    map: map,
-    radius: 300,
-    strokeColor: '#44c4ff',
-    fillColor: '#44c4ff'
-  }).bindTo('center', marker, 'position');
-  
+    google.maps.event.addListener(marker, 'dragend', function() {
+      onQueryChange(map, marker);
+    });
+  }
+
   navigator.geolocation.getCurrentPosition(function(p) {
     var ll = new google.maps.LatLng(p.coords.latitude, p.coords.longitude);
     map.setCenter(ll);
-    marker.setPosition(ll);
-    map.setZoom(14);
+    if (!Modernizr.touch) {
+      marker.setPosition(ll);
+      map.setZoom(14);
+    }
+    else {
+      map.setZoom(18);
+    }
+
   });
   
   new google.maps.FusionTablesLayer(478005, {
     map: map
   });
-  
-  google.maps.event.addListener(marker, 'dragend', function() {
-    var q = 'https://www.google.com/fusiontables/api/query?sql=' +
-        escape('SELECT * from 478005 WHERE ST_INTERSECTS(lat, CIRCLE(LATLNG' +
-        marker.getPosition() + ', 300))') + '&jsonCallback=?';
-    $.getJSON(q, function(data) {
-      var stops = data.table.rows;
-      var out = [];
-      for (var i = 0; i < stops.length; i++) {
-        var stop = stops[i];
-        out.push(new Stop(stop[0], stop[1], stop[2], stop[3]));
-      }
-      setStops(out);
-    });
-  });
 
   setInterval(updateTimes, 1000);
   stopHoverMarker.setMap(map);
 });
+
+function onQueryChange(map, marker) {
+  var q = ['https://www.google.com/fusiontables/api/query?sql='];
+
+  if (Modernizr.touch) {
+    var b = map.getBounds();
+    q.push(escape('SELECT * from 478005 WHERE ST_INTERSECTS(lat, RECTANGLE(' +
+            'LATLNG' + b.getSouthWest() + ',LATLNG' + b.getNorthEast() + '))'));
+  } else {
+    q.push(escape('SELECT * from 478005 WHERE ST_INTERSECTS(lat, CIRCLE(LATLNG' +
+      marker.getPosition() + ', 300))'));
+  }
+  q.push('&jsonCallback=?');
+
+  $.getJSON(q.join(''), function(data) {
+    var stops = data.table.rows;
+    var out = [];
+    for (var i = 0; i < stops.length; i++) {
+      var stop = stops[i];
+      out.push(new Stop(stop[0], stop[1], stop[2], stop[3]));
+    }
+    if (stops.length) {
+      setStops(out);
+    }
+    // TODO: do something if no stops are selected
+  });
+};
 
 function updateTimes() {
   var d = new Date() / 1000;
