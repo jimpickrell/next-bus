@@ -52,6 +52,8 @@ $(function() {
 });
 
 function getCurrentPosition(map, marker) {
+  $('#loc').hide();
+  $('#load').show();
   navigator.geolocation.getCurrentPosition(function(p) {
     var ll = new google.maps.LatLng(p.coords.latitude, p.coords.longitude);
     map.setCenter(ll);
@@ -61,6 +63,8 @@ function getCurrentPosition(map, marker) {
     } else {
       map.setZoom(18);
     }
+    $('#loc').show();
+    $('#load').hide();
   });
 };
 
@@ -84,6 +88,9 @@ function addTabs() {
 };
 
 function onQueryChange(map, marker) {
+	
+  $('#btn-buses').html('<img src="/static/ajax-loader.gif">');
+  
   var q = ['https://www.google.com/fusiontables/api/query?sql='];
 
   if (Modernizr.touch) {
@@ -107,6 +114,7 @@ function onQueryChange(map, marker) {
       setStops(out);
     }
     // TODO: do something if no stops are selected
+    $('#btn-buses').html('Next Buses');
   });
 };
 
@@ -157,9 +165,9 @@ function setBuses(stops) {
     var bus = b[i];
     var stop = currentStops[li.attr('data-stop')];
     var html = ['<li data-stop="',bus.stopid,'" data-datetime="',bus.time,'">',
-        '<span class="arrival"></span><span class="route">',bus.route,
-        '</span><span class="dest">',bus.dest,'</span>',
-        '<span class="stopdesc">',stop.getDesc(),'</span></li>'].join('');
+        '<div class="arrival"></div><div class="route">',bus.route,
+        '</div><div class="dest">',bus.dest,'</div>',
+        '<div class="stopdesc">',stop.getDesc(),'</div></li>'].join('');
 
     var li = $(html);
     $('#buses').append(li);
@@ -168,6 +176,7 @@ function setBuses(stops) {
 
 function query(ids) {
   $.getJSON('/query?' + ids, function(stops) {
+  	console.log(stops);
     setBuses(stops);
     updateTimes();
   });
@@ -180,13 +189,13 @@ function Stop(id, lat, lng, desc) {
 } 
 Stop.prototype.getLocation = function() {
   return this.ll_;
-}
+};
 Stop.prototype.getDesc = function() {
   return this.desc_;
-}
+};
 Stop.prototype.getId = function() {
   return this.id_;
-}
+};
 Stop.prototype.toString = function() {
   return [this.id_, this.ll_, this.desc_].join(' | ');
-}
+};
