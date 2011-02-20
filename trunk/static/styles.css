@@ -291,3 +291,10 @@ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fffff
   -webkit-transition: all .1s ease-in;
 }
 
+#about {
+  padding: 10px;
+}
+
+#about h1 {
+  font-size: 20px;
+}

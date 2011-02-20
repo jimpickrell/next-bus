@@ -45,6 +45,7 @@ $(function() {
     google.maps.event.addListener(marker, 'dragend', function() {
       onQueryChange(map, marker);
     });
+    onQueryChange(map, marker);
   }
 
    $('#my-location').click(function() {
@@ -76,7 +77,6 @@ $(function() {
     $(window).scroll(fixHeader);
     $("#buses").scroll(fixHeader);
   }
-
 });
 
 function getCurrentPosition(map, marker) {
@@ -103,22 +103,36 @@ function addTabs(map) {
 
     $('#map-canvas').show();
     $('#buses').hide();
+    $('#about').hide();
     $('.button-active').removeClass('button-active');
     $(this).addClass('button-active');
     google.maps.event.trigger(map, 'resize');
     return false;
   });
-  
+
   $('#btn-buses').click(function() {
     $('#my-location').hide();
     $('#refresh').show();
 
     $('#map-canvas').hide();
+    $('#about').hide();
     $('#buses').show();
     $('.button-active').removeClass('button-active');
     $(this).addClass('button-active');
     return false;
-  });  
+  });
+
+  $('#btn-about').click(function() {
+    $('#my-location').hide();
+    $('#refresh').show();
+
+    $('#map-canvas').hide();
+    $('#buses').hide();
+    $('#about').show();
+    $('.button-active').removeClass('button-active');
+    $(this).addClass('button-active');
+    return false;
+  });
 };
 
 function onQueryChange(map, marker) {
@@ -145,9 +159,15 @@ function onQueryChange(map, marker) {
     }
     if (stops.length) {
       setStops(out);
+    } else {
+      var message = '<li>No stops selected. ';
+      message += Modernizr.touch ?
+          'Move the map to include your nearest bus stops.' :
+          'Move the blue circle to include your nearest bus stops.';
+      message += '</li>';
+      $('#buses ul').empty().append($(message));
     }
-    // TODO: do something if no stops are selected
-    $('#btn-buses').html('Next Buses');
+    $('#btn-buses').text('Next Buses');
   });
 };
 
@@ -193,8 +213,10 @@ function setBuses(stops) {
   b.sort(function(a,b) {
     return a.time - b.time;
   });
-  $('#buses').empty();
-  var ul = $('<ul></ul>');
+  var ul = $('#buses ul').empty();
+  if (!b.length) {
+    ul.append($('<li>No buses at selected bus stops.</li>'));
+  }
   for (var i = 0; i < b.length; i++) {
     var bus = b[i];
     var stop = currentStops[bus.stopid];
@@ -207,7 +229,6 @@ function setBuses(stops) {
     var li = $(html);
     ul.append(li);
   }
-  $('#buses').append(ul);
 }
 
 function query(ids) {
