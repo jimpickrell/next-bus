@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
 import logging as log
-import StringIO
-import zipfile
+from StringIO import StringIO
+from zipfile import ZipFile
 import pprint
 import os
 from django.utils import simplejson as json
@@ -25,14 +25,16 @@ class StopGetter:
       return self.parse(result)
 
   def parse(self, result):
-    f = StringIO.StringIO(result.content)
+    f = StringIO(result.content)
     log.debug("Opening zip")
-    z = zipfile.ZipFile(f, 'r')
+    z = ZipFile(f, 'r')
     log.debug(z)
     log.debug("Parsing XML")
-    stopsxml = StringIO.StringIO(z.read('stops.xml'))
+    stopsxml = StringIO(z.read('stops.xml'))
+    f.close()
     stops = minidom.parse(stopsxml).getElementsByTagName('Stop')
     log.debug("Parsed XML")
+    stopsxml.close()
 
     res = []
 

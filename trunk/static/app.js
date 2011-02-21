@@ -220,13 +220,19 @@ function setBuses(stops) {
   for (var i = 0; i < b.length; i++) {
     var bus = b[i];
     var stop = currentStops[bus.stopid];
-    var html = ['<li data-stop="',bus.stopid,'" data-datetime="',bus.time,'">',
-        '<div class="arrival"></div><div class="route-info">',
-        '<span class="route">',bus.route,
-        '</span><span class="dest">',bus.dest,'</span></div>',
+    var html = ['<li><div class="arrival"></div>',
+        '<div class="route-info">',
+          '<span class="route">',bus.route,'</span>',
+          '<span class="dest">',bus.dest,'</span></div>',
         '<div class="stopdesc">',stop.getDesc(),'</div></li>'].join('');
 
-    var li = $(html);
+    var li = $(html)
+      .attr('data-stop', bus.stopid)
+      .attr('data-datetime', bus.time);
+
+    if (bus.realtime) {
+      li.addClass('realtime');
+    }
     ul.append(li);
   }
 }
