@@ -56,11 +56,24 @@
       </div>
     </div>
     <div id="alert">
-      Our data source (RTA) is currently extremely unreliable. Next Bus may not display any upcoming buses.
+      Our data source (RTA) is currently <em>extremely</em> unreliable. Next Bus may not display any upcoming buses.
     </div>
     <div id="footer">
       <a href="#" class="button button-left button-active" id="btn-map">Map</a><a href="#" class="button" id="btn-buses">Next Buses</a><a href="#" class="button button-right" id="btn-about">About</a>
     </div>
   </div>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-21396172-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
 </body>
 </html>
