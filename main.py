@@ -14,7 +14,7 @@ from google.appengine.api import memcache
 from google.appengine.ext.webapp import template
 
 DATA_URL = 'http://nswbusdata.info/ptipslivedata/getptipslivedata?filename=ptipslivedata.zip'
-CACHE_TIME = 600
+CACHE_TIME = 900 # 15 minutes
 
 class StopGetter:
   def get(self):
