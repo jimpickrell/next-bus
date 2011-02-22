@@ -38,6 +38,7 @@ class MetaHandler(webapp.RequestHandler):
     self.response.headers['Content-Type'] = 'text'
     self.response.out.write("Meta: \n")
     self.response.out.write("\tDate: %s\n" % m.time)
+    self.response.out.write("\tTime ago: %s\n" % (datetime.datetime.now() - m.time))
 
 class QueryHandler(webapp.RequestHandler):
   def get(self):
