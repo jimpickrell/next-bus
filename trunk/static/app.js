@@ -80,6 +80,9 @@ $(function() {
 });
 
 function getCurrentPosition(map, marker) {
+  if (!navigator.geolocation) {
+    return;
+  }
   $('#loc').hide();
   $('#load').show();
   navigator.geolocation.getCurrentPosition(function(p) {
