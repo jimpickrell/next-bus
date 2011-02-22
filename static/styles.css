@@ -3,7 +3,7 @@ html, body {
   padding: 0;
   width: 100%;
   height: 100%;
-}    
+}
     
 body {
  font-family: sans-serif;
@@ -20,6 +20,7 @@ body {
   top: 0;
   height: 38px;
   width: 100%;
+  background: #9dd53a;
   background: -moz-linear-gradient(top, #9dd53a 0%, #a1d54f 50%, #80c217 51%, #7cbc0a 100%); /* firefox */
 
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#9dd53a), color-stop(50%,#a1d54f), color-stop(51%,#80c217), color-stop(100%,#7cbc0a)); /* webkit */	
@@ -134,9 +135,14 @@ body {
   text-align: center;	
 }
 
+.ie6 #map-canvas,
+.ie7 #map-canvas {
+  height: 500px;
+}
+
 #map-canvas, #buses {
   height: 100%;
-  width: 100%;	
+  width: 100%;
   position: relative;
 }
 
