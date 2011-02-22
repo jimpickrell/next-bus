@@ -13,7 +13,7 @@ $(function() {
   new google.maps.FusionTablesLayer(478005, {
     map: map
   });
-  
+
   addTabs(map);
 
   if (Modernizr.touch) {
@@ -32,16 +32,16 @@ $(function() {
       flat: true,
       raiseOnDrag: false
     });
-    
+
     getCurrentPosition(map, marker);
-    
+
     new google.maps.Circle({
       map: map,
       radius: 300,
       strokeColor: '#44c4ff',
       fillColor: '#44c4ff'
     }).bindTo('center', marker, 'position');
-  
+
     google.maps.event.addListener(marker, 'dragend', function() {
       onQueryChange(map, marker);
     });
@@ -59,25 +59,39 @@ $(function() {
     updateTimes(true);
   }, 1000);
 
+      /*$(document).ready(function() {
+      $('.scrollable').each(function() {
+        new Scroller(this);
+      });
+    });*/
+
   stopHoverMarker.setMap(map);
   if (Modernizr.touch && ~navigator.userAgent.indexOf('iPhone')) {
-    var fixHeader = function() {
-      document.getElementById('footer').style.top =
-         (window.pageYOffset + window.innerHeight - 45) + 'px';
-      document.getElementById('header').style.top =
-         (window.pageYOffset) + 'px';
-    };
+    removeUrlBar();
+    document.body.addEventListener('touchmove', function(e) {
+      e.preventDefault();
+    });
 
-    $('#buses')[0].ontouchstart = fixHeader;
-    $('#buses')[0].ontouchmove = fixHeader;
-    $('#buses')[0].ontouchend = fixHeader;
-
-    setInterval(fixHeader, 500);
-    $("#btn-map, #btn-buses").click(fixHeader);
-    $(window).scroll(fixHeader);
-    $("#buses").scroll(fixHeader);
+    $(document).ready(function() {
+      $('.scrollable').each(function() {
+        new Scroller(this);
+      });
+    });
   }
 });
+
+function removeUrlBar() {
+  var height = $('body').height();
+
+  var iphoneFooter = 16;
+  $('#footer').css({top: height + iphoneFooter});
+  $('.scroll-frame').css({bottom: -(iphoneFooter)});
+  window.addEventListener('load', function() {
+    window.setTimeout(function() {
+      window.scrollTo(0, 1);
+    }, 0);
+  });
+};
 
 function getCurrentPosition(map, marker) {
   if (!navigator.geolocation) {
@@ -104,8 +118,8 @@ function addTabs(map) {
     $('#my-location').show();
     $('#refresh').hide();
 
-    $('#map-canvas').show();
-    $('#buses').hide();
+    $('#map-wrapper').show();
+    $('#buses-wrapper').hide();
     $('#about').hide();
     $('.button-active').removeClass('button-active');
     $(this).addClass('button-active');
@@ -117,20 +131,20 @@ function addTabs(map) {
     $('#my-location').hide();
     $('#refresh').show();
 
-    $('#map-canvas').hide();
+    $('#map-wrapper').hide();
     $('#about').hide();
-    $('#buses').show();
+    $('#buses-wrapper').show();
     $('.button-active').removeClass('button-active');
     $(this).addClass('button-active');
     return false;
   });
 
   $('#btn-about').click(function() {
-    $('#my-location').hide();
+    $('#amy-location').hide();
     $('#refresh').show();
 
-    $('#map-canvas').hide();
-    $('#buses').hide();
+    $('#map-wrapper').hide();
+    $('#buses-wrapper').hide();
     $('#about').show();
     $('.button-active').removeClass('button-active');
     $(this).addClass('button-active');
