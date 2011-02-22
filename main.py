@@ -1,109 +1,67 @@
 #!/usr/bin/env python
 
 import logging as log
-from StringIO import StringIO
-from zipfile import ZipFile
-import pprint
+
 import os
-from django.utils import simplejson as json
-from xml.dom import minidom
+import datetime
+
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
-from google.appengine.api import urlfetch
-from google.appengine.api import memcache
+#from google.appengine.api import memcache
 from google.appengine.ext.webapp import template
+from google.appengine.ext import db
+from django.utils import simplejson as json
 
-DATA_URL = 'http://nswbusdata.info/ptipslivedata/getptipslivedata?filename=ptipslivedata.zip'
+import stop
+import meta
+import stopgetter
+
 CACHE_TIME = 900 # 15 minutes
-
-class StopGetter:
-  def get(self):
-
-    result = urlfetch.fetch(DATA_URL)
-    log.info("Fetch done")
-    if result.status_code == 200:
-      return self.parse(result)
-
-  def parse(self, result):
-    f = StringIO(result.content)
-    log.debug("Opening zip")
-    z = ZipFile(f, 'r')
-    log.debug(z)
-    log.debug("Parsing XML")
-    stopsxml = StringIO(z.read('stops.xml'))
-    f.close()
-    stops = minidom.parse(stopsxml).getElementsByTagName('Stop')
-    log.debug("Parsed XML")
-    stopsxml.close()
-
-    res = []
-
-    for stop in stops:
-      res.append(self.stoptodict(stop))
-
-    log.debug(len(stops))
-
-    return res
-
-  def stoptodict(self, stop):
-    return {
-      'id': stop.attributes["TSN"].value,
-      'buses': self.arrivalstolist(stop, stop.getElementsByTagName('Arrival'))
-    }
-
-  def arrivalstolist(self, stop, arrivals):
-    res = []
-    for arrival in arrivals:
-      res.append({
-        'stopid': stop.attributes["TSN"].value,
-        'time': int(arrival.attributes["arrivalTime"].value),
-        'dest': arrival.attributes["destination"].value,
-        'realtime': arrival.attributes["realTime"].value == 'true',
-        'route': arrival.attributes["routeName"].value,
-        'vid': arrival.attributes["vehicleID"].value
-      })
-
-    return res
-
 
 class FetchHandler(webapp.RequestHandler):
   def get(self):
     log.debug("From cron: " +
         str('X-AppEngine-Cron' in self.request.headers))
 
-    stops = StopGetter().get()
+    stops = stopgetter.StopGetter().get()
 
-    if not memcache.add("stops", stops, CACHE_TIME):
-      log.error("Memcache failed")
-    else:
-      log.debug("set memcache from fetch")
+    db.put(stops)
+    
+    m = meta.Meta(key_name='meta')
+    m.time = datetime.datetime.now()
+    m.put()
 
+class MetaHandler(webapp.RequestHandler):
+  def get(self):
+    m = meta.Meta.get_by_key_name('meta')
+
+    self.response.headers['Content-Type'] = 'text'
+    self.response.out.write("Meta: \n")
+    self.response.out.write("\tDate: %s\n" % m.time)
 
 class QueryHandler(webapp.RequestHandler):
   def get(self):
+    self.response.out.write('[\n')
+
     q = self.request.query.rsplit(',')
-    stops = memcache.get("stops")
-    if stops is not None:
-      log.debug("Already in cache")
-      self.response.out.write(json.dumps(self.query(stops, q)))
-    else:
-      log.debug("Not in cache")
-      stops = StopGetter().get()
-      if memcache.add("stops", stops, CACHE_TIME):
-        self.response.out.write(json.dumps(self.query(stops, q)))
+    if len(q) == 1 and q[0] == '':
+      self.response.out.write(']')
+      return
 
-  def query(self, stops, q):
-    if len(q) == 0 or len(q) == 1 and q[0] == '':
-      log.debug('no query')
-      return stops
+    result = stop.Stop.get_by_key_name(q)
 
-    tojson = []
+    first = True
+    for s in result:
+      if first:
+        first = False
+      else:
+        self.response.out.write(',')
 
-    for stop in stops:
-      if stop['id'] in q:
-        tojson.append(stop)
+      self.response.out.write('{"stop":"%s","buses":' % s.key().name())
+      self.response.out.write(s.buses)
+      self.response.out.write('}\n')
 
-    return tojson
+    self.response.out.write(']')
 
 class MainHandler(webapp.RequestHandler):
   def get(self):
@@ -115,7 +73,8 @@ def main():
   application = webapp.WSGIApplication([
     ('/', MainHandler),
     ('/fetch', FetchHandler),
-    ('/query', QueryHandler)
+    ('/query', QueryHandler),
+    ('/meta', MetaHandler)
   ], debug=True)
 
   util.run_wsgi_app(application)
