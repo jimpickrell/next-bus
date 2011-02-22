@@ -178,7 +178,9 @@ function updateTimes(slide) {
     var diff = arr - d;
     if (diff < 0) {
       if (slide) {
-        $(this).slideUp();
+        $(this).slideUp(500, function() {
+          $(this).remove();
+        });
       } else {
         $(this).remove();
       }
@@ -232,6 +234,7 @@ function setBuses(stops) {
 
     if (bus.realtime) {
       li.addClass('realtime');
+      li.append($('<span class="icon">'))
     }
     ul.append(li);
   }

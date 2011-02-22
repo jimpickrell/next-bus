@@ -224,6 +224,7 @@ body {
   border-bottom: 1px solid #eee;
   padding: 10px;
   overflow: hidden;
+  position: relative;
 background: -moz-linear-gradient(top, #ffffff 0%, #f6f6f6 47%, #ededed 100%); /* firefox */
 
 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(47%,#f6f6f6), color-stop(100%,#ededed)); /* webkit */
@@ -267,7 +268,7 @@ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fffff
 .stopdesc {
   color: #666;
   font-size: 0.9em;
-  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", sans-serif;	
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", sans-serif;
 }
 
 
@@ -317,4 +318,17 @@ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fffff
 
 img a {
   border: none;
+}
+
+#buses li.realtime span.icon {
+  display: block;
+  position: absolute;
+  right: 5px;
+  top: 0;
+  height: 100%;
+  width: 16px;
+  background-image: url('geolocation_icon.png');
+  background-repeat: no-repeat;
+  background-position: right center;
+  opacity: .5;
 }
