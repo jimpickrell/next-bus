@@ -59,33 +59,77 @@ $(function() {
     updateTimes(true);
   }, 1000);
 
-      /*$(document).ready(function() {
+    /*$(document).ready(function() {
       $('.scrollable').each(function() {
+        $(this).addClass('shadow');
         new Scroller(this);
       });
     });*/
 
+     // removeUrlBar();
+
   stopHoverMarker.setMap(map);
-  if (Modernizr.touch && ~navigator.userAgent.indexOf('iPhone')) {
-    removeUrlBar();
-    document.body.addEventListener('touchmove', function(e) {
-      e.preventDefault();
+  if (Modernizr.touch) {
+    $(document).ready(function() {
+      removeUrlBar();
     });
 
-    $(document).ready(function() {
-      $('.scrollable').each(function() {
-        new Scroller(this);
+    var iPhone = navigator.userAgent.match(/iPhone/i);
+    var iPad = navigator.userAgent.match(/iPad/i);
+    if (iPhone || iPad) {
+      document.body.addEventListener('touchmove', function(e) {
+        e.preventDefault();
       });
-    });
+
+      $(document).ready(function() {
+        $('.scrollable').each(function() {
+          $(this).addClass('shadow');
+          new Scroller(this);
+        });
+      });
+    }
   }
 });
 
 function removeUrlBar() {
   var height = $('body').height();
+  var iPhone = navigator.userAgent.match(/iPhone/i);
+  var iPad = navigator.userAgent.match(/iPad/i); 
 
-  var iphoneFooter = 16;
-  $('#footer').css({top: height + iphoneFooter});
-  $('.scroll-frame').css({bottom: -(iphoneFooter)});
+  if (iPhone || iPad) {
+    var footer = 16;
+    $('#footer').css({top: height + footer});
+    $('#map-wrapper').css({
+      bottom: -(footer),
+      height: 'auto'
+    });
+    $('.scroll-frame').css({bottom: -footer});
+  } else {
+    $('#header').css({
+      position: 'fixed',
+      top: 0,
+      zIndex: 100
+    });
+
+    $('#footer').css({
+      position: 'fixed',
+      bottom: 0
+    });
+
+    $('#map-wrapper').css({
+      top: 33,
+      bottom: 43,
+      height: 'auto'
+    });
+
+    $('.scroll-frame').css({
+      height: 'auto',
+      top: 33,
+      paddingBottom: 43,
+      bottom: 'auto'
+    });
+  }
+
   window.addEventListener('load', function() {
     window.setTimeout(function() {
       window.scrollTo(0, 1);
