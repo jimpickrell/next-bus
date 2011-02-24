@@ -6,7 +6,8 @@ html, body {
 }
 
 body {
- font-family: sans-serif;
+  position: relative;
+  font-family: sans-serif;
 }
 
 #header {
@@ -40,6 +41,14 @@ body {
   overflow-y: scroll;
   bottom: 45px;
   width: 100%;
+}
+
+* {
+  -webkit-user-select: none;
+}
+
+.shadow {
+  -webkit-box-shadow: 0 0 50px rgba(0, 0, 0, 0.3);
 }
 
 #header h1 {
@@ -115,9 +124,9 @@ body {
   padding: 0 4px;
 }
 
-#map-wrapper {
-  height: 100%;
+#map-wrapper, #buses-wrapper, #about {
   width: 100%;
+  bottom: 43px;
   top: 38px;
   position: absolute;
 }
@@ -127,7 +136,7 @@ body {
   height: 500px;
 }
 
-#map-canvas, #buses {
+#map-canvas {
   height: 100%;
   width: 100%;
   position: relative;
@@ -326,4 +335,9 @@ img a {
   background-repeat: no-repeat;
   background-position: right center;
   opacity: .5;
+}
+
+#about h1 {
+  margin: 0;
+  padding: 5px;
 }

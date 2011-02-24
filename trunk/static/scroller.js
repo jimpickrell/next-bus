@@ -15,7 +15,7 @@ function Scroller(element) {
   this.dragging_ = false;
   this.decerating_ = false;
 
-  if (~navigator.userAgent.indexOf('Mobile')) {
+  if (~navigator.userAgent.indexOf('iPhone')) {
     frame.addEventListener('touchstart', this, false);
     frame.addEventListener('touchmove', this, false);
     frame.addEventListener('touchend', this, false);
@@ -76,6 +76,7 @@ Scroller.prototype.onTouchStart = function(e) {
   if (this.contentHeight == 0) {
     this.calculateSizes();
   }
+
   this.stopMomentum();
 
   if (e.touches && e.touches.length > 1) {
@@ -90,6 +91,7 @@ Scroller.prototype.onTouchStart = function(e) {
   } else {
     this.startTouchY = e.clientY;
   }
+
   this.startTime_ = e.timeStamp;
   this.contentStartOffsetY = this.contentOffsetY;
 };
@@ -108,13 +110,16 @@ Scroller.prototype.onTouchMove = function(e) {
     var deltaY = currentY - this.startTouchY;
     var newY = deltaY + this.contentStartOffsetY;
 
-    if (newY > this.maxTopOffset) {
-      return;
+    /*if (newY > this.maxTopOffset) {
+      if (newY == deltaY) {
+        console.log(newY + ' - ' + this.maxTopOffset + ' - ' + deltaY + ' - ' + this.contentStartOffsetY);
+      }
+      //return;
     }
 
-    if (newY < this.heightDiff - this.maxBottomOffset) {
+    if (newY < this.heightDiff - this.maxBottomOffset - 13) {
       return;
-    }
+    }*/
 
     this.animateTo(newY);
   }
@@ -122,7 +127,7 @@ Scroller.prototype.onTouchMove = function(e) {
 
 Scroller.prototype.onTouchEnd = function(e) {
   if (this.isDragging()) {
-    this.dragging_ = false;
+    //this.dragging_ = false;
     if (this.shouldStartMomentum()) {
       this.doMomentum(e);
     } else {
@@ -188,7 +193,12 @@ Scroller.prototype.doMomentum = function(e) {
   } else {
     var clientY = e.clientY;
   }
-  
+
+  this.dragging_ = false;
+
+  if (!this.contentOffsetY) {
+    return;
+  }
 
   if (this.contentOffsetY > 0) {
     this.momentumTo(0);
@@ -199,6 +209,7 @@ Scroller.prototype.doMomentum = function(e) {
     this.momentumTo(this.heightDiff);
     return;
   }
+
 
 
   // Calculate the movement properties. Implement getEndVelocity using the
@@ -220,7 +231,7 @@ Scroller.prototype.doMomentum = function(e) {
 };
 
 Scroller.prototype.stopMomentum = function() {
-  if (this.isDecelerating()) {
+  //if (this.isDecelerating()) {
     // Get the computed style object.
     var style = document.defaultView.getComputedStyle(this.element, null);
     // Computed the transform in a matrix object given the style.
@@ -229,5 +240,5 @@ Scroller.prototype.stopMomentum = function() {
     this.element.style.webkitTransition = '';
     // Set the element transform to where it is right now.
     this.animateTo(transform.m42);
-  }
+  //}
 };
