@@ -198,7 +198,7 @@ function addTabs(map) {
 
 function onQueryChange(map, marker) {
   $('#btn-buses').html('<img src="/static/ajax-loader.gif">');
-  
+
   var q = ['https://www.google.com/fusiontables/api/query?sql='];
 
   if (Modernizr.touch) {
@@ -272,7 +272,7 @@ function setBuses(stops) {
   for (var i = 0; i < stops.length; i++) {
     b = b.concat(stops[i].buses);
   }
-  var d = new Date()
+  var d = parseInt(new Date() / 1000);
   b.sort(function(a,b) {
     return a.time - b.time;
   });
@@ -280,6 +280,11 @@ function setBuses(stops) {
   if (!b.length) {
     ul.append($('<li>No buses at selected bus stops.</li>'));
   }
+  var diff = 0;
+  if (b.length && location.search.indexOf('relative') != -1) {
+    diff = d - b[0].time;
+  }
+
   for (var i = 0; i < b.length; i++) {
     var bus = b[i];
     var stop = currentStops[bus.stopid];
@@ -288,6 +293,8 @@ function setBuses(stops) {
           '<span class="route">',bus.route,'</span>',
           '<span class="dest">',bus.dest,'</span></div>',
         '<div class="stopdesc">',stop.getDesc(),'</div></li>'].join('');
+
+    bus.time += diff;
 
     var li = $(html)
       .attr('data-stop', bus.stopid)
