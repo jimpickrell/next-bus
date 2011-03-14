@@ -277,11 +277,13 @@ function setBuses(stops) {
     return a.time - b.time;
   });
   var ul = $('#buses ul').empty();
-  if (!b.length) {
-    ul.append($('<li>No buses at selected bus stops.</li>'));
+  var relative = location.search.indexOf('relative') != -1;
+  if (!b.length || (!relative && b[b.length - 1].time < d)) {
+    ul.append($('<li>No buses at selected bus stops. ' +
+        'This could mean RTA data is down and/or not up-to-date.</li>'));
   }
   var diff = 0;
-  if (b.length && location.search.indexOf('relative') != -1) {
+  if (relative) {
     diff = d - b[0].time;
   }
 
